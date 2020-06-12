@@ -1,3 +1,37 @@
+$fn=50;
+
+SERVO_SHAFT_DIAMETER = 5;
+module cavity(
+    diameter,
+    height,
+    shim_count = 3,
+    shim_width = 1,
+    shim_length = .5,
+) {
+    e = .005678;
+
+    difference() {
+        cylinder(
+            h = height,
+            d = diameter
+        );
+
+        if (shim_count > 0) {
+            for (i = [0 : shim_count - 1]) {
+                rotate([0, 0, i * 360 / shim_count]) {
+                    translate([
+                        shim_width / -2,
+                        diameter / 2 - shim_length,
+                        -e
+                    ]) {
+                        cube([shim_width, shim_length, height + e * 2]);
+                    }
+                }
+            }
+        }
+    }
+}
+
 module horn_goldilocks_array(
     height = 2.5,
     plot = 10,
@@ -34,3 +68,6 @@ module horn_goldilocks_array(
         }
     }
 }
+
+
+horn_goldilocks_array();
