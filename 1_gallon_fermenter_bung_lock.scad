@@ -1,12 +1,13 @@
 $fn=50;
 
-bung_lock = [60, 60, 5];
+thick = 5;
+bung_lock = [60, 60, thick];
 ferm_rt = 18;
 ferm_rb = 19;
-neck_opening_start_x = 14; //18; -- first attempt
+neck_opening_start_x = 14; //13; -- third attempt //18; -- first attempt
 neck_opening_end_x = bung_lock.x - neck_opening_start_x;
 neck_opening_end_y = bung_lock.y;
-neck_opening_start_y = bung_lock.y - 22;
+neck_opening_start_y = bung_lock.y - 26;
 neck_opening_offset_x = 8;
 
 difference() {
@@ -22,24 +23,32 @@ difference() {
                          [5, 6, 2, 1], [6, 7, 3, 2], [7, 4, 0, 3]]);
 }
 
+translate([-6, 0, 0])
+    rubberband_holder(thick, 6, 6);
 
-//translate([bung_lock.x + 10, 0, 5])
-//    rotate([180, 0, 180])
-//        rubber_band_holder([10, 5, 5], 1, 2);
-//
-//translate([bung_lock.x + 10, 8, 5])
-//    rotate([180, 0, 180])
-//        rubber_band_holder([10, 5, 5], 1, 2);
-//
-//translate([bung_lock.x + 10, 16, 5])
-//    rotate([180, 0, 180])
-//        rubber_band_holder([10, 5, 5], 1, 2);
-//
-//translate([bung_lock.x + 10, 24, 5])
-//    rotate([180, 0, 180])
-//        rubber_band_holder([10, 5, 5], 1, 2);
+translate([bung_lock.x + 6, 0, thick])
+    rotate([0, 180, 0])
+        rubberband_holder(thick, 6, 6);
 
-
+module rubberband_holder(thick, notch_r, peg_y)
+{
+    //thick = 2;
+    //notch_r = 6;
+    //peg_y = 6;
+    
+    difference() {
+        cube([notch_r, bung_lock.y, thick]);
+        
+        translate([0, notch_r + peg_y, 0])
+            cylinder(thick, notch_r, notch_r);
+    
+        translate([0, 2 * (notch_r + peg_y) + peg_y, 0])
+            cylinder(thick, notch_r, notch_r);
+        
+        translate([0, 3 * (notch_r + peg_y) + 2 * peg_y, 0])
+            cylinder(thick, notch_r, notch_r);
+    }
+}
 
 module rubber_band_holder(peg, circ_r, chamf_z) {
 
