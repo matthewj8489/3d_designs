@@ -11,7 +11,7 @@ ins_d = 14;
 
 // side 2
 rec_h = 5;
-rec_d = 10;
+rec_d = 11;
 stop_h = 2;
 stop_d = 7;
 
