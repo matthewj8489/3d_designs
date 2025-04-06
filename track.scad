@@ -1,6 +1,7 @@
 use <trains/tracklib.scad>;
 
 $fn=120;
+$o=0.1; // global overlap variable
 
 
 pillared_bridge_track_connector();
@@ -10,37 +11,40 @@ module pillared_bridge_track_connector() {
     platform_h = 5;
 
     translate([0, 0, platform_h]) straight_track(22);
-    cube([40, 40, platform_h]);
+    cube([40, wood_width(), platform_h]);
 
-    translate([10, -10, 0]) pillar();
-    translate([10, 50, 0]) pillar();
+    translate([pillar_radius(), -pillar_radius(), 0]) pillar();
+    translate([pillar_radius(), wood_width() + pillar_radius(), 0]) pillar();
 
     // connection to pillar
     translate([0, -5, platform_h]) pillar_track_connection();
-    translate([0, 45, platform_h]) mirror([0, 1, 0]) pillar_track_connection();
+    translate([0, 5+wood_width(), platform_h]) mirror([0, 1, 0]) pillar_track_connection();
 }
 
-module pillar_track_connection(height=17, pillar_male_h=5) {
+module pillar_track_connection(height=17) {
     difference() {
-        translate([2.5, 0, 0]) cube([15, 5, 17 - pillar_male_h]);
-        translate([10, -10 + 5, 0]) cylinder(17 - pillar_male_h, 10, 10);
+        translate([2.5, 0, 0]) cube([15, 5, height - pillar_male_height()]);
+        translate([pillar_radius(), -pillar_radius() + 5, 0]) cylinder(height - pillar_male_height(), pillar_radius(), pillar_radius());
     }
 }
 
-module pillar(height=17, male_h=5) {
+function pillar_male_height() = 5;
+function pillar_radius() = 10;
+
+module pillar(height=17) {    
     play = 0.5;
     difference() {
-        translate([0, 0, male_h]) cylinder(height - male_h, 10, 10);
-        translate([0, 0, height - male_h]) cylinder(male_h, 6 + play, 8 + play);
+        translate([0, 0, pillar_male_height()]) cylinder(height - pillar_male_height(), pillar_radius(), pillar_radius());
+        translate([0, 0, height - pillar_male_height()]) cylinder(pillar_male_height(), pillar_radius() - 4 + play, pillar_radius() - 2 + play);
     }
-    cylinder(male_h, 6, 8);
+    cylinder(pillar_male_height(), pillar_radius() - 4, pillar_radius() - 2);
 }
 
 module straight_track(length=53.5) {
     difference() {
         wood_track(length);
-        translate([0, 20, 0]) wood_cutout();
+        translate([0, wood_width()/2, 0]) wood_cutout();
     }
 
-    translate([length, 20, 0]) wood_plug();
+    translate([length, wood_width()/2, 0]) wood_plug();
 }
