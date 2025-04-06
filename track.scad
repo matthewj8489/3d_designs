@@ -8,10 +8,11 @@ pillared_bridge_track_connector();
 
 
 module pillared_bridge_track_connector() {
-    platform_h = 5;
+    platform_h = pillar_male_height();
+    length = 22;
 
-    translate([0, 0, platform_h]) straight_track(22);
-    cube([40, wood_width(), platform_h]);
+    translate([0, 0, platform_h]) straight_track(length);
+    cube([length+wood_plug_radius()+wood_plug_neck_length(), wood_width(), platform_h]);
 
     translate([pillar_radius(), -pillar_radius(), 0]) pillar();
     translate([pillar_radius(), wood_width() + pillar_radius(), 0]) pillar();
