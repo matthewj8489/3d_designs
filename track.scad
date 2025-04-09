@@ -4,6 +4,7 @@ $fn=120;
 $o=0.1; // global overlap variable
 
 
+//pillar();
 pillared_bridge_track_connector();
 
 
@@ -24,8 +25,8 @@ module pillared_bridge_track_connector() {
 
 module pillar_track_connection(height=17) {
     difference() {
-        translate([2.5, 0, 0]) cube([15, 5, height - pillar_male_height()]);
-        translate([pillar_radius(), -pillar_radius() + 5, 0]) cylinder(height - pillar_male_height(), pillar_radius(), pillar_radius());
+        translate([2.5, 0, 0]) cube([15, 5, height - pillar_male_height() - sqrt(.5)*bevel()]);
+        translate([pillar_radius(), -pillar_radius() + 5, 0]) cylinder(height - pillar_male_height()+$o, pillar_radius(), pillar_radius());
     }
 }
 
@@ -36,7 +37,7 @@ module pillar(height=17) {
     play = 0.5;
     difference() {
         translate([0, 0, pillar_male_height()]) cylinder(height - pillar_male_height(), pillar_radius(), pillar_radius());
-        translate([0, 0, height - pillar_male_height()]) cylinder(pillar_male_height(), pillar_radius() - 4 + play, pillar_radius() - 2 + play);
+        translate([0, 0, height - pillar_male_height()]) cylinder(pillar_male_height()+$o, pillar_radius() - 4 + play, pillar_radius() - 2 + play);
     }
     cylinder(pillar_male_height(), pillar_radius() - 4, pillar_radius() - 2);
 }
