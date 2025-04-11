@@ -4,8 +4,8 @@ $fn=120;
 $o=0.1; // global overlap variable
 
 
-pillar();
-//pillared_bridge_track_connector();
+//pillar();
+pillared_bridge_track_connector();
 
 
 module pillared_bridge_track_connector() {
@@ -13,7 +13,24 @@ module pillared_bridge_track_connector() {
     length = 22;
 
     translate([0, 0, platform_h]) straight_track(length);
-    cube([length+wood_plug_radius()+wood_plug_neck_length(), wood_width(), platform_h]);
+    
+    // platform
+    difference() {
+        cube([length+wood_plug_radius()+wood_plug_neck_length(), wood_width(), platform_h]);
+        // chamfer
+        translate([-bevel(), 0, 0]) 
+            rotate([0,45,0])
+                cube([bevel(), wood_width(), bevel()]);
+        translate([0, 0, -bevel()]) 
+            rotate([45,0,0])
+                cube([length+wood_plug_radius()+wood_plug_neck_length(), bevel(), bevel()]);
+        translate([length+wood_plug_radius()+wood_plug_neck_length()-0.45, 0, 0]) 
+            rotate([0,45,0])
+                cube([bevel(), wood_width(), bevel()]);
+        translate([0, wood_width(), -bevel()]) 
+            rotate([45,0,0])
+                cube([length+wood_plug_radius()+wood_plug_neck_length(), bevel(), bevel()]);
+    }
 
     translate([pillar_radius(), -pillar_radius(), 0]) pillar();
     translate([pillar_radius(), wood_width() + pillar_radius(), 0]) pillar();
@@ -33,7 +50,8 @@ module pillar_track_connection(height=17) {
 function pillar_male_height() = 6;
 function pillar_radius() = 10;
 
-module pillar(height=12) {    
+module pillar(height=12) { 
+    assert(height>=pillar_male_height(), "The pillar height must be at least as tall as the male pillar connector");
     play = 0.1;
     male_top_radius = pillar_radius() - 1;
     male_bottom_radius = pillar_radius() - 4;
