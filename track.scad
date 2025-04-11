@@ -1,11 +1,11 @@
-use <trains/tracklib.scad>;
+use <trains/tracklib.scad>; //https://github.com/dotscad/trains
 
 $fn=120;
 $o=0.1; // global overlap variable
 
 
-//pillar();
-pillared_bridge_track_connector();
+pillar();
+//pillared_bridge_track_connector();
 
 
 module pillared_bridge_track_connector() {
@@ -30,16 +30,18 @@ module pillar_track_connection(height=17) {
     }
 }
 
-function pillar_male_height() = 5;
+function pillar_male_height() = 6;
 function pillar_radius() = 10;
 
-module pillar(height=17) {    
-    play = 0.5;
+module pillar(height=12) {    
+    play = 0.1;
+    male_top_radius = pillar_radius() - 1;
+    male_bottom_radius = pillar_radius() - 4;
     difference() {
-        translate([0, 0, pillar_male_height()]) cylinder(height - pillar_male_height(), pillar_radius(), pillar_radius());
-        translate([0, 0, height - pillar_male_height()]) cylinder(pillar_male_height()+$o, pillar_radius() - 4 + play, pillar_radius() - 2 + play);
+        translate([0, 0, pillar_male_height()]) cylinder(height, pillar_radius(), pillar_radius());
+        translate([0, 0, height]) cylinder(pillar_male_height()+$o, male_bottom_radius + play, male_top_radius + play);
     }
-    cylinder(pillar_male_height(), pillar_radius() - 4, pillar_radius() - 2);
+    cylinder(pillar_male_height(), male_bottom_radius, male_top_radius);
 }
 
 module straight_track(length=53.5) {
