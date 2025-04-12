@@ -4,8 +4,31 @@ $fn=120;
 $o=0.1; // global overlap variable
 
 
+
 //pillar();
 pillared_bridge_track_connector();
+//pillar_bridge();
+
+
+// two levels of brio bridge
+//pillared_bridge_track_connector();
+//
+//translate([0, 0, 12]) {
+//    pillar_bridge();
+//}
+//
+//translate([0, 0, 50+pillar_male_height()*2])
+//    pillared_bridge_track_connector();
+
+
+module pillar_bridge(pillar_height=50) {
+    pillar_connector_height = 10;
+    translate([pillar_radius(), -pillar_radius(), 0]) pillar(pillar_height);
+    translate([pillar_radius(), wood_width()+pillar_radius(), 0]) pillar(pillar_height);
+    
+    translate([0, -pillar_radius(), pillar_height-pillar_connector_height])
+        cube([pillar_radius()*2, wood_width()+pillar_radius()*2, pillar_connector_height-$o]);
+}
 
 
 module pillared_bridge_track_connector() {
