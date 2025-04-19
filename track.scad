@@ -8,7 +8,8 @@ $o=0.1; // global overlap variable
 //wood_track();
 
 //pillar_square(12);
-//pillar_square_bridge(70, wood_width()+4);
+translate([-40, 0, 0])
+pillar_square_bridge(70, wood_width()+4);
 //pillared_square_bridge_pillars(pillar_male_height());
 
 //pillared_bridge_track_connector();
@@ -30,11 +31,10 @@ $o=0.1; // global overlap variable
 translate([0, 2, 0])
     pillared_bridge_track_connector();
 
-translate([0, 0, 12]) {
+translate([0, 0, wood_height()-platform_height()])
     pillar_square_bridge(70, wood_width()+4);
-}
 
-translate([0, 2, 70+platform_height()])
+translate([0, 2, 70+wood_height()-platform_height()])
     pillared_bridge_track_connector();
 
 
@@ -55,9 +55,8 @@ module pillar_square_bridge(pillar_height, bridge_width) {
         pillar_square(pillar_height, pillar_male_h);
     translate([pillar_thickness()/2, bridge_width+pillar_thickness()/2, 0]) 
         pillar_square(pillar_height, pillar_male_h);
-    //pillar_male_h+pillar_height-pillar_connector_height-wood_height()-platform_height()
-    translate([0, 0-$o, pillar_male_h])
-        cube([pillar_thickness(), bridge_width+$o+30, pillar_connector_height-$o]);
+    translate([0, 0-$o, pillar_male_h+pillar_height-pillar_connector_height-pillar_male_h])
+        cube([pillar_thickness(), bridge_width+$o, pillar_connector_height-$o]);
 }
 
 function platform_height() = 8;
