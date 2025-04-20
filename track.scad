@@ -1,4 +1,5 @@
 use <trains/tracklib.scad>; //https://github.com/dotscad/trains
+include <BOSL2/std.scad>;
 
 $fn=120;
 $o=0.1; // global overlap variable
@@ -43,23 +44,8 @@ module track_with_platform_and_pillar_connectors() {
     translate([0, 0, platform_h]) straight_track(length);
     
     // platform
-    difference() {
-        cube([length+wood_plug_radius()+wood_plug_neck_length(), wood_width(), platform_h]);
-        
-        // chamfer
-        translate([-bevel(), 0, 0]) 
-            rotate([0,45,0])
-                cube([bevel(), wood_width(), bevel()]);
-        translate([0, 0, -bevel()]) 
-            rotate([45,0,0])
-                cube([length+wood_plug_radius()+wood_plug_neck_length(), bevel(), bevel()]);
-        translate([length+wood_plug_radius()+wood_plug_neck_length()-0.45, 0, 0]) 
-            rotate([0,45,0])
-                cube([bevel(), wood_width(), bevel()]);
-        translate([0, wood_width(), -bevel()]) 
-            rotate([45,0,0])
-                cube([length+wood_plug_radius()+wood_plug_neck_length(), bevel(), bevel()]);
-    }
+    translate([(length+wood_plug_radius()+wood_plug_neck_length())/2, wood_width()/2, platform_h/2])
+        cuboid([length+wood_plug_radius()+wood_plug_neck_length(), wood_width(), platform_h], chamfer=bevel(), edges=BOTTOM); 
 
     pillar_connectors(platform_h);
 }
@@ -74,10 +60,10 @@ module pillar_connectors(pillar_male_height) {
         pillar(12, pillar_male_height);
 
     // connection to pillar
-    translate([0, -track_connection_length, pillar_male_height]) 
-        cube([pillar_thickness(), track_connection_length, track_connection_height]);
-    translate([0, wood_width(), pillar_male_height]) 
-        cube([pillar_thickness(), track_connection_length, track_connection_height]);
+    translate([bevel(), -track_connection_length, pillar_male_height]) 
+        cube([pillar_thickness()-bevel()*2, track_connection_length, track_connection_height]);
+    translate([bevel(), wood_width(), pillar_male_height]) 
+        cube([pillar_thickness()-bevel()*2, track_connection_length, track_connection_height]);
 }
 
 module pillar(height, male_height) {
@@ -89,7 +75,7 @@ module pillar(height, male_height) {
     
     translate([0,0,height/2+male_height]) {
         difference() {
-            cube([pillar_width, pillar_width, height], true);
+            cuboid([pillar_width, pillar_width, height], chamfer=bevel(), edges="Z");
             translate([0, 0, (height-male_height)/2]) cube([male_width+play, male_width+play, male_height+$o], true);
         }
         translate([0,0,-height/2-male_height/2]) cube([male_width, male_width, male_height], true);
