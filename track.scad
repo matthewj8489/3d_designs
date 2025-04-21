@@ -8,17 +8,17 @@ $slop=0.1; // slop to make connectors fit snug
 
 //pillar(12, 8);
 //track_with_platform_and_pillar_supports();
-bridge_pier(70, wood_width()+4);
+//bridge_pier(70, wood_width()+4);
 
 // two levels of brio bridge
-//translate([0, 2, 0])
-//    track_with_platform_and_pillar_supports();
-//
-//translate([22-pillar_thickness(), 0, wood_height()])
-//    bridge_pier(70, wood_width()+4);
-//
-//translate([0, 2, 70+wood_height()])
-//    track_with_platform_and_pillar_supports();
+translate([0, 2, 0])
+    track_with_platform_and_pillar_supports();
+
+translate([22-pillar_thickness()/2, (wood_width()+4)/2, wood_height()])
+    bridge_pier(70, wood_width()+4);
+
+translate([0, 2, 70+wood_height()])
+    track_with_platform_and_pillar_supports();
 
 
 function platform_height() = 8;
@@ -31,14 +31,14 @@ module bridge_pier(pillar_height, bridge_width) {
     play = get_slop()*2;
     
     // pillars
-    translate([pillar_thickness()/2, -pillar_thickness()/2, 0]) 
+    fwd((bridge_width+pillar_thickness())/2)
         pillar(pillar_height, pillar_male_h);
-    translate([pillar_thickness()/2, bridge_width+pillar_thickness()/2, 0]) 
+    back((bridge_width+pillar_thickness())/2)
         pillar(pillar_height, pillar_male_h);
     
     // connection between pillars
-    translate([bevel(), 0-$o, pillar_male_h+pillar_height-pillar_connector_height-pillar_male_h-play])
-        cube([pillar_thickness()-bevel()*2, bridge_width+$o, pillar_connector_height-$o]);
+    up(pillar_male_h+pillar_height-pillar_connector_height-pillar_male_h-play+pillar_connector_height/2)
+        cube([pillar_thickness()-bevel()*2, bridge_width+$o*2, pillar_connector_height-$o], center=true);
 }
 
 module track_with_platform_and_pillar_supports() {
