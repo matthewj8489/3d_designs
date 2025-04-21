@@ -3,6 +3,7 @@ include <BOSL2/std.scad>;
 
 $fn=120;
 $o=0.1; // global overlap variable
+$slop=0.1; // slop to make connectors fit snug
 
 
 //pillar(12, 8);
@@ -69,16 +70,15 @@ module pillar_connectors(pillar_male_height) {
 module pillar(height, male_height) {
     assert(height>=male_height, "The pillar height must be at least as tall as the male pillar connector");
     
-    play = 0.1;
     pillar_width = pillar_thickness();
     male_width = pillar_width - 4;
     
-    translate([0,0,height/2+male_height]) {
+    up(height/2+male_height) {
         difference() {
             cuboid([pillar_width, pillar_width, height], chamfer=bevel(), edges="Z");
-            translate([0, 0, (height-male_height)/2]) cube([male_width+play, male_width+play, male_height+$o], true);
+            up((height-male_height)/2) cube([male_width+get_slop(), male_width+get_slop(), male_height+$o], true);
         }
-        translate([0,0,-height/2-male_height/2]) cube([male_width, male_width, male_height], true);
+        up(-height/2-male_height/2) cube([male_width, male_width, male_height], true);
     }
 }
 
