@@ -79,7 +79,7 @@ module pillar(height, male_height) {
     up(height/2+male_height) {
         difference() {
             cuboid([pillar_width, pillar_width, height], chamfer=bevel(), edges="Z");
-            up((height-male_height)/2) cube([male_width+get_slop(), male_width+get_slop(), male_height+$o], true);
+            up((height-male_height)/2) cube([male_width+get_slop()*2, male_width+get_slop()*2, male_height+$o], true);
         }
         up(-height/2-male_height/2) cube([male_width, male_width, male_height], true);
     }
