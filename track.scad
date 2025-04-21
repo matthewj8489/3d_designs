@@ -37,7 +37,7 @@ module bridge_pier(pillar_height, bridge_width) {
         pillar(pillar_height, pillar_male_h);
     
     // connection between pillars
-    up(pillar_male_h+pillar_height-pillar_connector_height-pillar_male_h-play+pillar_connector_height/2)
+    up(pillar_male_h+pillar_height-pillar_connector_height/2-pillar_male_h-play)
         cube([pillar_thickness()-bevel()*2, bridge_width+$o*2, pillar_connector_height-$o], center=true);
 }
 
