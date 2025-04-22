@@ -8,17 +8,17 @@ $slop=0.1; // slop to make connectors fit snug
 
 //pillar(12, 8);
 //track_with_platform_and_pillar_supports();
-//bridge_pier(70, wood_width()+4);
+bridge_pier(70, wood_width()+4);
 
 // two levels of brio bridge
-translate([0, 2, 0])
-    track_with_platform_and_pillar_supports();
-
-translate([22-pillar_thickness()/2, (wood_width()+4)/2, wood_height()])
-    bridge_pier(70, wood_width()+4);
-
-translate([0, 2, 70+wood_height()])
-    track_with_platform_and_pillar_supports();
+//translate([0, 2, 0])
+//    track_with_platform_and_pillar_supports();
+//
+//translate([22-pillar_thickness()/2, (wood_width()+4)/2, wood_height()])
+//    bridge_pier(70, wood_width()+4);
+//
+//translate([0, 2, 70+wood_height()])
+//    track_with_platform_and_pillar_supports();
 
 
 function platform_height() = 8;
@@ -39,6 +39,29 @@ module bridge_pier(pillar_height, bridge_width) {
     // connection between pillars
     up(pillar_male_h+pillar_height-pillar_connector_height/2-pillar_male_h-play)
         cube([pillar_thickness()-bevel()*2, bridge_width+$o*2, pillar_connector_height-$o], center=true);
+    
+    // support for connection between pillars
+    up(pillar_male_h+pillar_height-bridge_width/4-pillar_male_h-pillar_connector_height)
+    back(bridge_width/4)
+    back_half()
+    top_half()
+    difference() {
+        cube([pillar_thickness()-bevel()*2,bridge_width/2, bridge_width/2], center=true);
+        yrot(90)
+            cylinder(h=pillar_thickness()-bevel()*2+$o*2,r=bridge_width/4, center=true);
+        
+    }   
+    
+    up(pillar_male_h+pillar_height-bridge_width/4-pillar_male_h-pillar_connector_height)
+    fwd(bridge_width/4)
+    front_half()
+    top_half()
+    difference() {
+        cube([pillar_thickness()-bevel()*2,bridge_width/2, bridge_width/2], center=true);
+        yrot(90)
+            cylinder(h=pillar_thickness()-bevel()*2+$o*2,r=bridge_width/4, center=true);
+        
+    }   
 }
 
 module track_with_platform_and_pillar_supports() {
@@ -88,7 +111,9 @@ module pillar(height, male_height) {
 module straight_track(length=53.5) {
     difference() {
         wood_track(length);
-        translate([0, wood_width()/2, 0]) wood_cutout();
+        translate([0, wood_width()/2, 0]) 
+            plug_cutout(wood_plug_radius() + .3 + get_slop(), wood_plug_neck_length(), wood_height());
+            //wood_cutout();
     }
 
     translate([length, wood_width()/2, 0]) wood_plug();
