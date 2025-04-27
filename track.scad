@@ -3,12 +3,12 @@ include <BOSL2/std.scad>;
 
 $fn=120;
 $o=0.1; // global overlap variable
-$slop=0.1; // slop to make connectors fit snug
+$slop=0.05; // slop to make connectors fit snug
 
 
-//pillar(12, 8);
+pillar(12, 8);
 //track_with_platform_and_pillar_supports();
-bridge_pier(70, wood_width()+4);
+//bridge_pier(70, wood_width()+4);
 
 // two levels of brio bridge
 //translate([0, 2, 0])
@@ -98,11 +98,12 @@ module pillar(height, male_height) {
     
     pillar_width = pillar_thickness();
     male_width = pillar_width - 4;
+    play = get_slop()*8;
     
     up(height/2+male_height) {
         difference() {
             cuboid([pillar_width, pillar_width, height], chamfer=bevel(), edges="Z");
-            up((height-male_height)/2) cube([male_width+get_slop()*2, male_width+get_slop()*2, male_height+$o], true);
+            up((height-male_height)/2) cube([male_width+play, male_width+play, male_height+$o], true);
         }
         up(-height/2-male_height/2) cube([male_width, male_width, male_height], true);
     }
@@ -112,8 +113,7 @@ module straight_track(length=53.5) {
     difference() {
         wood_track(length);
         translate([0, wood_width()/2, 0]) 
-            plug_cutout(wood_plug_radius() + .3 + get_slop(), wood_plug_neck_length(), wood_height());
-            //wood_cutout();
+            wood_cutout();
     }
 
     translate([length, wood_width()/2, 0]) wood_plug();
