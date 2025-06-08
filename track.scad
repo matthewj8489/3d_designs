@@ -1,32 +1,40 @@
 use <trains/tracklib.scad>; //https://github.com/dotscad/trains
-include <BOSL2/std.scad>;
+include <BOSL2/std.scad>; //https://github.com/BelfrySCAD/BOSL2
 
 $fn=120;
 $o=0.1; // global overlap variable
 $slop=0.05; // slop to make connectors fit snug
 
+function pillar_height() = 62; //70
 
-pillar(12, 8);
+// shorten pillar by 8 mm
+//      pillar total height: 62 mm
+// shorten total support by 3 mm
+//      shorten support between pillars by 2 mm
+//      shorten platform/male connector height by 1 mm
+
+//pillar(12, 8);
+
 //track_with_platform_and_pillar_supports();
-//bridge_pier(70, wood_width()+4);
+bridge_pier(pillar_height(), wood_width()+4);
 
 // two levels of brio bridge
 //translate([0, 2, 0])
 //    track_with_platform_and_pillar_supports();
 //
 //translate([22-pillar_thickness()/2, (wood_width()+4)/2, wood_height()])
-//    bridge_pier(70, wood_width()+4);
+//    bridge_pier(pillar_height(), wood_width()+4);
 //
-//translate([0, 2, 70+wood_height()])
+//translate([0, 2, pillar_height()+wood_height()])
 //    track_with_platform_and_pillar_supports();
 
 
-function platform_height() = 8;
+function platform_height() = 7; //8
 function pillar_thickness() = 12;
 
 
 module bridge_pier(pillar_height, bridge_width) {
-    pillar_connector_height = 6;
+    pillar_connector_height = 4; //6
     pillar_male_h = platform_height();
     play = get_slop()*2;
     
