@@ -3,7 +3,7 @@ include <BOSL2/std.scad>; //https://github.com/BelfrySCAD/BOSL2
 
 $fn = 120;
 $o = 0.1; // global overlap variable
-$slop = 0.075; //0.05 // slop to make connectors fit snug
+$slop = 0.075; //0.05 // slop to make connectors fit snug: 20% infill, Fine resolution
 
 function pillar_height() = 62; //70
 
