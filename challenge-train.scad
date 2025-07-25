@@ -1,15 +1,84 @@
 include <BOSL2/std.scad>; //https://github.com/BelfrySCAD/BOSL2
 include <BOSL2/gears.scad>;
 include <Technic.scad/Technic.scad>; //https://github.com/cfinke/Technic.scad
+use <LEGO.scad/LEGO.scad>; //https://github.com/cfinke/LEGO.scad
 
 //$fn = 120;
 $o = 0.1; // global overlap variable
 $slop = 0.075; //0.05 // slop to make connectors fit snug: 20% infill, Fine resolution
 
-// difference() {
-//     cylinder(r=10, h=3, center=true);
-//     cylinder(r=2, h=3+$o, center=true);
+
+// Gear Ratios
+// https://www.youtube.com/watch?v=txQs3x-UN34&t=136s
+// gear ratio = driven teeth / driver teeth = driver rpm / driven rpm
+// output torque = input torque * gear ratio
+// output rpm = input rpm / gear ratio
+// going from a smaller gear to a larger gear increases torque but decreases speed
+// going from a larger gear to a smaller gear decreases torque but increases speed
+
+// r_big = 5;
+// r_small = 2;
+// play = 0.5;
+
+// back(r_big+play) right(r_big+play) {
+//     cyl(10, r_big, center=false);
+//     right(r_big*2) cyl(10, r_big, center=false);
+//     right(r_big*3+r_small) cyl(10, r_small, center=false);
 // }
+
+// cube([r_big*4+r_small*2+play*2, r_big*2+play*2, 5]);
+
+r_big = 5;
+r_small = 2;
+r_peg = 3;
+r_peg_inner = 1.4;
+r_peg_h = 5;
+play = 0.5;
+
+difference() {
+    cyl(r_peg_h, r_peg, center=true);
+    cyl(r_peg_h+play, r_peg_inner, center=true);
+}
+
+right(r_big*2)
+difference() {
+    cyl(r_peg_h, r_peg, center=true);
+    cyl(r_peg_h+play, r_peg_inner, center=true);
+}
+
+right(r_big*3+r_small)
+difference() {
+    cyl(r_peg_h, r_peg, center=true);
+    cyl(r_peg_h+play, r_peg_inner, center=true);
+}
+
+fwd(r_peg) left(r_peg) down(r_peg_h/2)
+difference() {
+    cube([r_big*3+r_small+r_peg*2, r_peg*2, r_peg_h]);
+    right(r_peg-r_peg_inner*2) back(r_peg/2) down(play)
+    cube([r_big*3+r_small+r_peg_inner*4, r_peg_inner*2, r_peg_h+play*2]);
+}
+
+module chassis() {
+difference() {
+        union() {
+        block(
+            type="brick",
+            brand="lego",
+            block_bottom_type="closed",
+            width=4,
+            length=4,
+            height=1/3
+        );
+        up(3) left(16) xrot(90) 
+            cyl(40, 3, center=true);
+        }
+
+        up(3) left(16) xrot(90) 
+            cyl(41, 1.4, center=true);
+    }
+}
+
 
 module wheel() {
     difference() {
