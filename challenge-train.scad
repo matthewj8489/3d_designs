@@ -28,55 +28,65 @@ $slop = 0.075; //0.05 // slop to make connectors fit snug: 20% infill, Fine reso
 
 // cube([r_big*4+r_small*2+play*2, r_big*2+play*2, 5]);
 
-r_big = 5;
-r_small = 2;
-r_peg = 3;
-r_peg_inner = 1.4;
-r_peg_h = 5;
-play = 0.5;
+chassis();
 
-difference() {
-    cyl(r_peg_h, r_peg, center=true);
-    cyl(r_peg_h+play, r_peg_inner, center=true);
-}
+module gear_stabilizer() {
+    r_big = 12;
+    r_big_2 = 11.5;
+    r_small = 4;
+    r_peg = 3;
+    r_peg_inner = 1.4;
+    r_peg_h = 3;
+    play = 0.5;
 
-right(r_big*2)
-difference() {
-    cyl(r_peg_h, r_peg, center=true);
-    cyl(r_peg_h+play, r_peg_inner, center=true);
-}
+    difference() {
+        cyl(r_peg_h, r_peg, center=true);
+        cyl(r_peg_h+play, r_peg_inner, center=true);
+    }
 
-right(r_big*3+r_small)
-difference() {
-    cyl(r_peg_h, r_peg, center=true);
-    cyl(r_peg_h+play, r_peg_inner, center=true);
-}
+    right(r_big+r_big_2)
+    difference() {
+        cyl(r_peg_h, r_peg, center=true);
+        cyl(r_peg_h+play, r_peg_inner, center=true);
+    }
 
-fwd(r_peg) left(r_peg) down(r_peg_h/2)
-difference() {
-    cube([r_big*3+r_small+r_peg*2, r_peg*2, r_peg_h]);
-    right(r_peg-r_peg_inner*2) back(r_peg/2) down(play)
-    cube([r_big*3+r_small+r_peg_inner*4, r_peg_inner*2, r_peg_h+play*2]);
+    right(r_big+r_big_2*2+r_small)
+    difference() {
+        cyl(r_peg_h, r_peg, center=true);
+        cyl(r_peg_h+play, r_peg_inner, center=true);
+    }
+
+    fwd(r_peg) left(r_peg) down(r_peg_h/2)
+    difference() {
+        cube([r_big+r_big_2*2+r_small+r_peg*2, r_peg*2, r_peg_h]);
+        right(r_peg-r_peg_inner*2) back(r_peg/2) down(play)
+        cube([r_big+r_big_2*2+r_small+r_peg_inner*4, r_peg_inner*2, r_peg_h+play*2]);
+    }
 }
 
 module chassis() {
-difference() {
+    difference() {
         union() {
-        block(
-            type="brick",
-            brand="lego",
-            block_bottom_type="closed",
-            width=4,
-            length=4,
-            height=1/3
-        );
-        up(3) left(16) xrot(90) 
-            cyl(40, 3, center=true);
+            block(
+                type="brick",
+                brand="lego",
+                block_bottom_type="closed",
+                width=4,
+                length=4,
+                height=1/3
+            );
+
+            up(3) left(20) xrot(90) 
+                cyl(40, 3, center=true);
+
+            left(20) fwd(20)
+            cube([5, 40, 3.2]);
         }
 
-        up(3) left(16) xrot(90) 
+        up(3) left(20) xrot(90) 
             cyl(41, 1.4, center=true);
     }
+
 }
 
 
