@@ -28,7 +28,53 @@ $slop = 0.075; //0.05 // slop to make connectors fit snug: 20% infill, Fine reso
 
 // cube([r_big*4+r_small*2+play*2, r_big*2+play*2, 5]);
 
-chassis();
+//chassis(16, 2, 4);
+
+// wheel, gear, axle connector
+train_wheel();
+up(1.5+1)
+spur_gear(circ_pitch=1.5, teeth=48, thickness=2);
+
+// axle female receivers
+// doesn't work
+// difference() {
+//     cyl(8, 2);
+//     cyl(9, 1);
+// }
+
+// WINNER
+// difference() {
+//     cyl(8, 2);
+//     cyl(9, 1+get_slop());
+// }
+
+// right(5)
+// difference() {
+//     cyl(8, 2);
+//     cyl(9, 1+get_slop()*2);
+// }
+
+// right(10)
+// difference() {
+//     cyl(8, 2);
+//     cyl(9, 1+get_slop()*5);
+// }
+
+// right(15)
+// difference() {
+//     cyl(8, 2);
+//     cyl(9, 1+0.5);
+// }
+
+
+module train_wheel() {
+    cyl(3, 12);
+    up(1.5+4)
+    difference() {
+        cyl(8, 2);
+        cyl(9, 1+get_slop());
+    }
+}
 
 module gear_stabilizer() {
     r_big = 12;
@@ -64,27 +110,28 @@ module gear_stabilizer() {
     }
 }
 
-module chassis() {
+
+module chassis(axle_len, lego_width, lego_length) {
     difference() {
         union() {
             block(
                 type="brick",
                 brand="lego",
                 block_bottom_type="closed",
-                width=4,
-                length=4,
+                width=lego_width,
+                length=lego_length,
                 height=1/3
             );
 
             up(3) left(20) xrot(90) 
-                cyl(40, 3, center=true);
+                cyl(axle_len, 3, center=true);
 
-            left(20) fwd(20)
-            cube([5, 40, 3.2]);
+            left(20) fwd(axle_len / 2)
+            cube([5, axle_len, 3.2]);
         }
 
         up(3) left(20) xrot(90) 
-            cyl(41, 1.4, center=true);
+            cyl(axle_len+1, 1.4, center=true);
     }
 
 }
