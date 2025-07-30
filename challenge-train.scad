@@ -16,63 +16,26 @@ $slop = 0.075; //0.05 // slop to make connectors fit snug: 20% infill, Fine reso
 // going from a smaller gear to a larger gear increases torque but decreases speed
 // going from a larger gear to a smaller gear decreases torque but increases speed
 
-// r_big = 5;
-// r_small = 2;
-// play = 0.5;
-
-// back(r_big+play) right(r_big+play) {
-//     cyl(10, r_big, center=false);
-//     right(r_big*2) cyl(10, r_big, center=false);
-//     right(r_big*3+r_small) cyl(10, r_small, center=false);
-// }
-
-// cube([r_big*4+r_small*2+play*2, r_big*2+play*2, 5]);
-
 //chassis(16, 2, 4);
 
 // wheel, gear, axle connector
 train_wheel();
-up(1.5+1)
-spur_gear(circ_pitch=1.5, teeth=48, thickness=2);
 
-// axle female receivers
-// doesn't work
-// difference() {
-//     cyl(8, 2);
-//     cyl(9, 1);
-// }
+function axle_receiver_radius() = 1 + get_slop();
 
-// WINNER
-// difference() {
-//     cyl(8, 2);
-//     cyl(9, 1+get_slop());
-// }
+module train_wheel(wheel_thickness=5, axle_receiver_h=5, gear_thickness=2) {
+    // wheel
+    cyl(wheel_thickness, 12);
+    
+    // gear
+    up(wheel_thickness/2 + gear_thickness/2)
+    spur_gear(circ_pitch=2, teeth=34, thickness=gear_thickness, shaft_diam=axle_receiver_radius()*2);
 
-// right(5)
-// difference() {
-//     cyl(8, 2);
-//     cyl(9, 1+get_slop()*2);
-// }
-
-// right(10)
-// difference() {
-//     cyl(8, 2);
-//     cyl(9, 1+get_slop()*5);
-// }
-
-// right(15)
-// difference() {
-//     cyl(8, 2);
-//     cyl(9, 1+0.5);
-// }
-
-
-module train_wheel() {
-    cyl(3, 12);
-    up(1.5+4)
+    // axle receiver
+    up(wheel_thickness/2 + gear_thickness/2 + axle_receiver_h/2)
     difference() {
-        cyl(8, 2);
-        cyl(9, 1+get_slop());
+        cyl(axle_receiver_h, 2);
+        cyl(axle_receiver_h+1, axle_receiver_radius());
     }
 }
 
