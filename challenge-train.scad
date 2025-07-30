@@ -23,19 +23,23 @@ train_wheel();
 
 function axle_receiver_radius() = 1 + get_slop();
 
-module train_wheel(wheel_thickness=5, axle_receiver_h=5, gear_thickness=2) {
-    // wheel
-    cyl(wheel_thickness, 12);
-    
-    // gear
-    up(wheel_thickness/2 + gear_thickness/2)
-    spur_gear(circ_pitch=2, teeth=34, thickness=gear_thickness, shaft_diam=axle_receiver_radius()*2);
-
-    // axle receiver
-    up(wheel_thickness/2 + gear_thickness/2 + axle_receiver_h/2)
+module train_wheel(wheel_thickness=5, axle_receiver_h=3, gear_thickness=2) {
     difference() {
-        cyl(axle_receiver_h, 2);
-        cyl(axle_receiver_h+1, axle_receiver_radius());
+        union() {
+            // wheel
+            cyl(wheel_thickness, 12);
+
+            // gear
+            up(wheel_thickness/2 + gear_thickness/2)
+            spur_gear(circ_pitch=2, teeth=34, thickness=gear_thickness);
+
+            // axle receiver
+            up(wheel_thickness/2 + gear_thickness/2 + axle_receiver_h/2)
+            cyl(axle_receiver_h, 2);
+        }
+        
+        up((axle_receiver_h+gear_thickness+wheel_thickness/2+1)/2)
+        cyl(axle_receiver_h+gear_thickness+wheel_thickness/2+1, axle_receiver_radius());
     }
 }
 
