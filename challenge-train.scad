@@ -17,29 +17,50 @@ $slop = 0.075; //0.05 // slop to make connectors fit snug: 20% infill, Fine reso
 // going from a larger gear to a smaller gear decreases torque but increases speed
 
 //chassis(16, 2, 4);
+//chassis_v2(16, 2);
 
-// wheel, gear, axle connector
-train_wheel();
+//train_wheel(axle_receiver_h=1);
+// right(26) up(3)
+// spur_gear(circ_pitch=2, teeth=44, thickness=2);
+spur_gear(circ_pitch=2, teeth=34, thickness=4, shaft_diam=axle_receiver_radius()*2);
+
+module wheel_with_gear() {
+    // wheel, gear, axle connector
+    train_wheel(axle_receiver_h = 0);
+    right(25)
+    train_wheel(axle_receiver_h = 1, gear_thickness = 0);
+    fwd(25)
+    train_wheel(axle_receiver_h = 1, gear_thickness = 0);
+    fwd(25) right(25)
+    train_wheel(axle_receiver_h = 1, gear_thickness = 0);
+}
 
 function axle_receiver_radius() = 1 + get_slop();
 
-module train_wheel(wheel_thickness=5, axle_receiver_h=3, gear_thickness=2) {
+module train_wheel(wheel_thickness=3, axle_receiver_h=3, gear_thickness=2) {
+    gear_displacement = gear_thickness > 0 ? wheel_thickness / 2 + gear_thickness / 2 : 0;
+    receiver_displacement = axle_receiver_h > 0 ? wheel_thickness / 2 + gear_thickness + axle_receiver_h/2 : 0;
+
     difference() {
         union() {
             // wheel
             cyl(wheel_thickness, 12);
 
             // gear
-            up(wheel_thickness/2 + gear_thickness/2)
-            spur_gear(circ_pitch=2, teeth=34, thickness=gear_thickness);
+            if (gear_thickness > 0) {
+                up(gear_displacement)
+                spur_gear(circ_pitch=2, teeth=34, thickness=gear_thickness);
+            }
 
             // axle receiver
-            up(wheel_thickness/2 + gear_thickness/2 + axle_receiver_h/2)
-            cyl(axle_receiver_h, 2);
+            if (axle_receiver_h > 0) {
+                up(receiver_displacement)
+                cyl(axle_receiver_h, 2);
+            }
         }
         
-        up((axle_receiver_h+gear_thickness+wheel_thickness/2+1)/2)
-        cyl(axle_receiver_h+gear_thickness+wheel_thickness/2+1, axle_receiver_radius());
+        up((axle_receiver_h+gear_thickness+0.5)/2)
+        cyl(axle_receiver_h+gear_thickness+wheel_thickness+1, axle_receiver_radius());
     }
 }
 
@@ -90,6 +111,7 @@ module chassis(axle_len, lego_width, lego_length) {
                 height=1/3
             );
 
+            // axle connector
             up(3) left(20) xrot(90) 
                 cyl(axle_len, 3, center=true);
 
@@ -103,6 +125,43 @@ module chassis(axle_len, lego_width, lego_length) {
 
 }
 
+module chassis_v2(axle_len, lego_width) {
+    displacement = 36;
+
+    difference() {
+        union() {
+            block(
+                type="brick",
+                brand="lego",
+                block_bottom_type="closed",
+                width=lego_width,
+                length=8,
+                height=1/3
+            );
+
+            // axle connector 1
+            up(3) left(displacement) xrot(90) 
+                cyl(axle_len, 3, center=true);
+
+            left(displacement) fwd(axle_len / 2)
+            cube([5, axle_len, 3.2]);
+
+            // axle connector 2
+            up(3) right(displacement) xrot(90) 
+                cyl(axle_len, 3, center=true);
+
+            right(displacement) fwd(-axle_len / 2) zrot(180)
+            cube([5, axle_len, 3.2]);
+        }
+
+        up(3) left(displacement) xrot(90) 
+            cyl(axle_len+1, 1.4, center=true);
+
+        up(3) right(displacement) xrot(90) 
+            cyl(axle_len+1, 1.4, center=true);
+    }
+
+}
 
 module wheel() {
     difference() {
